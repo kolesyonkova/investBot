@@ -1,6 +1,7 @@
 .idea
 /logs
 dispatcher/target
+node/target
 
 # Project exclude paths
 /common-jpa/target/
