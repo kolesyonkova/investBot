@@ -42,7 +42,6 @@ public class BondServiceImpl implements BondService {
     }
 
     private List<Map<String, String>> parseTable(Document doc) {
-        System.out.println("NNE");
         Elements res = doc.select(BONDS_SELECTOR + ":contains(Облигации)");
         Element table;
         if (!res.isEmpty()) {
@@ -64,7 +63,6 @@ public class BondServiceImpl implements BondService {
             Map<String, String> tuple = new HashMap<>();
             for (Element colVal : colVals)
                 tuple.put(headers.get(colCount++), colVal.text());
-            System.out.println(tuple);
             listMap.add(tuple);
         }
         return listMap;
