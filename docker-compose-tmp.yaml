@@ -1,0 +1,49 @@
+version: "3.3"
+
+services:
+
+  rmq:
+    container_name: rmq
+    image: "rabbitmq:3.10.6-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  dispatcher:
+    image: cr.yandex/crpbngi4qksv6ebnhakv/dispatcher
+    depends_on:
+      - rmq
+    environment:
+      - DATABASE_HOST=rc1d-tfjiyjg46rh34ufc.mdb.yandexcloud.net
+      - DATABASE_PORT=6432
+      - DATABASE_USERNAME=user1
+      - DATABASE_PASSWORD=user1user1
+      - DATABASE_NAME=db1
+      - BOT_NAME=clouds_2023_reports_bot
+      - BOT_TOKEN=6314250289:AAH9-QdP-C-jRG8-W1UB4PsAXB0eV8y4op4
+      - RMQ_HOST=rmq
+      - RMQ_PORT=5672
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - SERVER_PORT=8084
+    ports:
+      - "8084:8084"
+  node:
+    image: cr.yandex/crpbngi4qksv6ebnhakv/node
+    depends_on:
+      - rmq
+    environment:
+      - DATABASE_HOST=rc1d-tfjiyjg46rh34ufc.mdb.yandexcloud.net
+      - DATABASE_PORT=6432
+      - DATABASE_USERNAME=user1
+      - DATABASE_PASSWORD=user1user1
+      - DATABASE_NAME=db1
+      - BOT_NAME=clouds_2023_reports_bot
+      - BOT_TOKEN=6314250289:AAH9-QdP-C-jRG8-W1UB4PsAXB0eV8y4op4
+      - RMQ_HOST=rmq
+      - RMQ_PORT=5672
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - SERVER_PORT=8085
+    ports:
+      - "8085:8085"

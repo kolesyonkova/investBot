@@ -1,0 +1,8 @@
+.idea
+/logs
+dispatcher/target
+
+# Project exclude paths
+/common-jpa/target/
+/common-rabbitmq/target/
+/node/target/

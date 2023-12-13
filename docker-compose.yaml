@@ -1,0 +1,69 @@
+version: "3.3"
+
+services:
+  db:
+    container_name: postgres
+    image: "postgres"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "15432:5432"
+
+  rmq:
+    container_name: rmq
+    image: "rabbitmq:3.10.6-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  dispatcher:
+    image: cr.yandex/crpbngi4qksv6ebnhakv/dispatcher
+    build:
+      context: dispatcher
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - rmq
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
+      - BOT_NAME=clouds_2023_reports_bot
+      - BOT_TOKEN=6314250289:AAH9-QdP-C-jRG8-W1UB4PsAXB0eV8y4op4
+      - RMQ_HOST=rmq
+      - RMQ_PORT=5672
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - SERVER_PORT=8084
+    ports:
+      - "8084:8084"
+  node:
+    image: cr.yandex/crpbngi4qksv6ebnhakv/node
+    build:
+      context: node
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - rmq
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
+      - BOT_NAME=clouds_2023_reports_bot
+      - BOT_TOKEN=6314250289:AAH9-QdP-C-jRG8-W1UB4PsAXB0eV8y4op4
+      - RMQ_HOST=rmq
+      - RMQ_PORT=5672
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - SERVER_PORT=8085
+    ports:
+      - "8085:8085"
+volumes:
+  postgres_data: { }
